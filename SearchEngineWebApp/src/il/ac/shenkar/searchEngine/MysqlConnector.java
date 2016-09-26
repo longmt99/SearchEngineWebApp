@@ -1,11 +1,9 @@
-package il.ac.shenkar.SearchEngine;
+package il.ac.shenkar.searchEngine;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,8 +13,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 /* This class is responsible for:
  * 1.Initializing a connection to the MySQL server
@@ -71,8 +70,8 @@ public class MysqlConnector {
 	public void createTable_indexFile() throws SQLException {
 		String createIndexTable = "CREATE TABLE indexFile ("
 				+ "        word VARCHAR(30) NOT NULL, "
-				+ "        docNumber INT(4) NOT NULL, "
-				+ "        freq INT(4) DEFAULT 0, "
+				+ "        docNumber  VARCHAR(500) NOT NULL DEFAULT '', "
+				+ "        freq VARCHAR(500) DEFAULT '', "
 				+ "		   hits INT(4) DEFAULT 0 )";
 
 		try {
@@ -231,24 +230,25 @@ public class MysqlConnector {
 	 */
 	public void removeDuplicate() throws SQLException {
 		statement = connection.createStatement();
-		// Creating a temporary table that will store a table without duplicate
-		// rows.
-		statement.executeUpdate("CREATE temporary TABLE tsum AS"
-				+ "		SELECT word, docNumber, SUM(freq) as freq , hits "
-				+ "		FROM indexfile group by word, docNumber;");
-		// Clearing completely the 'index File' table
-		statement.executeUpdate("TRUNCATE TABLE indexFile;");
-
-		// Inserting into the empty 'index file' table all rows from the
-		// temporary table
-		statement
-				.executeUpdate("INSERT INTO indexFile (`word`,`docNumber`,`freq`, `hits`)"
-						+ "		SELECT word,docNumber,freq,hits " + "		FROM tsum;");
-
-		// Deleting the temporary table we used
-		statement.executeUpdate("DROP TEMPORARY TABLE IF EXISTS tsum;");
-
-		statement.close();
+		try {
+			// Creating a temporary table that will store a table without duplicate rows.
+			statement.executeUpdate("CREATE temporary TABLE tsum AS"
+					+ "		SELECT word,GROUP_CONCAT(freq) as freq, GROUP_CONCAT(docNumber) docNumber,hits "
+					+ "		FROM indexfile group by word;");
+			// Clearing completely the 'index File' table
+			statement.executeUpdate("TRUNCATE TABLE indexFile;");
+	
+			// Inserting into the empty 'index file' table all rows from the
+			// temporary table
+			statement.executeUpdate("INSERT INTO indexFile (`word`,`docNumber`,`freq`, `hits`)"
+							+ "		SELECT word,docNumber,freq,hits " + "		FROM tsum;");
+		
+		} finally {
+			// Deleting the temporary table we used
+			statement.executeUpdate("DROP TEMPORARY TABLE IF EXISTS tsum;");
+			statement.close();
+		}
+		
 	}
 
 	// remove all the words from DB that corresponding to a file
@@ -475,7 +475,11 @@ public class MysqlConnector {
 										// the index file
 
 				// Add this word to the database
-				insert_indexFile(tmpWord, docNum, 1);
+				if(checkWordExistedInIndexFile(tmpWord,docNum)){
+					updateFreqInIndexFile(tmpWord,docNum);
+				}else{
+					insert_indexFile(tmpWord, docNum, 1);
+				}	
 			}
 		}
 	}
@@ -560,11 +564,11 @@ public class MysqlConnector {
 		return splitByOR;
 	}
 
-	public List<Integer> getDocNumResults(List<String> splitedQueryList)
+	public List<FileDescriptor> getDocNumResults(List<String> splitedQueryList)
 			throws SQLException {
-		List<Integer> resultDocNumbers = new ArrayList<Integer>();
-		List<Integer> docNumbers_ToRemove = new ArrayList<Integer>();
-		List<Integer> docNumbers_ToRemoveFRom = new ArrayList<Integer>();
+		List<FileDescriptor> resultDocNumbers = new ArrayList<FileDescriptor>();
+		List<FileDescriptor> docNumbers_ToRemove = new ArrayList<FileDescriptor>();
+		List<FileDescriptor> docNumbers_ToRemoveFRom = new ArrayList<FileDescriptor>();
 		for (String words : splitedQueryList) {
 
 			/*
@@ -590,7 +594,8 @@ public class MysqlConnector {
 				// Get docNum by words
 				docNumbers_ToRemove = getDocNumList(tmp);
 
-				for (int num : docNumbers_ToRemove) {
+				for (FileDescriptor doc : docNumbers_ToRemove) {
+					int num = doc.getDocNum();
 					int index_to_remove = docNumbers_ToRemoveFRom.indexOf(num);
 					if (index_to_remove != -1) {
 						docNumbers_ToRemoveFRom.remove(index_to_remove);
@@ -598,9 +603,10 @@ public class MysqlConnector {
 				}
 				
 				// Add numbers to main list of ducument numbers
-				for (int num : docNumbers_ToRemoveFRom) {
+				for (FileDescriptor doc : docNumbers_ToRemoveFRom) {
+					int num = doc.getDocNum();
 					if (resultDocNumbers.indexOf(num) == -1) {
-						resultDocNumbers.add(num);
+						resultDocNumbers.add(doc);
 					}
 				}
 
@@ -610,22 +616,57 @@ public class MysqlConnector {
 				List<String> tmp = new ArrayList<String>(Arrays.asList(words.split(" ")));
 				
 				// Get docNum by words
-				List<Integer> docNumbers_to_add_if_need = getDocNumList(tmp);
+				List<FileDescriptor> docNumbers_to_add_if_need = getDocNumList(tmp);
 				
 				// Add numbers to main list of ducument numbers
-				for (int num : docNumbers_to_add_if_need) {
+				for (FileDescriptor doc : docNumbers_to_add_if_need) {
+					int num = doc.getDocNum();
 					if (resultDocNumbers.indexOf(num) == -1) {
-						resultDocNumbers.add(num);
+						resultDocNumbers.add(doc);
 					}
 				}
 			}
 		}
 		return resultDocNumbers;
 	}
+	/**
+	 * Get and check 1 Word of one file is existed or not in indexFile
+	 * @param doc
+	 * @return
+	 * @throws SQLException 
+	 */
+	private boolean checkWordExistedInIndexFile(String  word , int docNum) throws SQLException{
+		statement = connection.createStatement();
+		String query = "SELECT docNumber,freq  FROM indexFile "
+				+ "		WHERE word = '" + word + "'"
+						+ " AND  docNumber = " + docNum + "" ;
+		ResultSet rs = statement.executeQuery(query);
+		while (rs.next()) {
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * update Freq In IndexFile if existed 
+	 * @param word
+	 * @param docNum
+	 * @throws SQLException
+	 */
+	private void updateFreqInIndexFile(String  word , int docNum) throws SQLException {
+		statement = connection.createStatement();
 
-	public List<Integer> getDocNumList(List<String> stringList)
+		// Change freq=freq +1
+		statement.executeUpdate("UPDATE indexFile "
+					+ "		SET freq=freq +1"
+					+ "		WHERE docNumber =" + docNum
+					+ "	    	AND word ='" + word+"'");
+
+		statement.close();
+	}
+
+	public List<FileDescriptor> getDocNumList(List<String> stringList)
 			throws SQLException {
-		List<Integer> documentNumbers = new ArrayList<Integer>();
+		List<FileDescriptor> documentNumbers = new ArrayList<FileDescriptor>();
 		StringBuilder words = new StringBuilder();
 		// example of the string we are trying to create:
 		// 'blue','pen','green','key'
@@ -640,19 +681,28 @@ public class MysqlConnector {
 		//if (numberOfWords-1 !=0) numberOfWords--;
 
 		statement = connection.createStatement();
-		String query = "SELECT docNumber  FROM indexFile "
-				+ "		WHERE word IN (" + words + ")" + "		GROUP BY docNumber"
-				+ "		HAVING COUNT(DISTINCT word) > " + numberOfWords/1.5;
+		String query = "SELECT docNumber,freq  FROM indexFile "
+				+ "		WHERE word IN (" + words + ")" ;
 		ResultSet rs = statement.executeQuery(query);
 		while (rs.next()) {
-			documentNumbers.add(rs.getInt("docNumber"));
+			String docNumberResult = rs.getString("docNumber");
+			String freqResult = rs.getString("freq");
+			String[] splitsNum = StringUtils.split(docNumberResult,",");
+			String[] splitsFreq = StringUtils.split(freqResult,",");
+			for (int i = 0; i < splitsNum.length; i++) {
+				int num = Integer.parseInt(splitsNum[i]);
+				int freq= Integer.parseInt(splitsFreq[i]);
+				FileDescriptor doc = new FileDescriptor(num, freq);
+				documentNumbers.add(doc);
+			}
 		}
 		return documentNumbers;
 	}
 
-	public List<FileDescriptor> create_fileDescriptors_list_by_docNumbers(List<Integer> docNumbers_of_results) throws SQLException, IOException {
+	public List<FileDescriptor> create_fileDescriptors_list_by_docNumbers(List<FileDescriptor> docNumbers_of_results) throws SQLException, IOException {
 		List <FileDescriptor> fd = new ArrayList<FileDescriptor>();
-		for( int docNum : docNumbers_of_results ){
+		for( FileDescriptor doc : docNumbers_of_results ){
+			int docNum = doc.getDocNum();
 			String selectSQL = "SELECT * FROM postingFile WHERE docNumber=? AND deleted=?";
 			PreparedStatement prepstate = connection.prepareStatement (selectSQL);
 			prepstate.setInt(1, docNum);
@@ -670,6 +720,7 @@ public class MysqlConnector {
 				 
 				 int counter =0;
 				 FileDescriptor fileDes = new FileDescriptor();
+				 fileDes.setFreq(doc.getFreq());
 				 fileDes.setPath(rs.getString("docPath"));
 				 
 				 /* init values */

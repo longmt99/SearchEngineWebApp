@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=windows-1255"
 	pageEncoding="windows-1255"%>
 <%@ page import="java.util.Iterator"%>
-<%@ page import="il.ac.shenkar.SearchEngine.FileDescriptor"%>
+<%@ page import="il.ac.shenkar.searchEngine.FileDescriptor"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,7 +87,7 @@
 							//<a href="../db/file.txt" target="_blank">Who is Superman?</a>
 							+ "	<section id='title'> <a href='.."
 							+ pathWithoutStart + "' target='_blank' class='resultTitleLink'>"
-							+ fileItem.getTitle() + "</a></section>"
+							+ fileItem.getTitle() + "</a> ("+fileItem.getFreq()+")</section>"
 							+ "	<section id='preview'>" + preview_with_bold_text
 							+ "</section>"
 							+ "	<section id='resultDetailsContainer'>"

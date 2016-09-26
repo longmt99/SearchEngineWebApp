@@ -1,4 +1,4 @@
-package il.ac.shenkar.SearchEngine;
+package il.ac.shenkar.searchEngine;
 
 public class FileDescriptor {
 	private String title;
@@ -7,10 +7,19 @@ public class FileDescriptor {
 	private String preview;
 	private String path;
 	private String isPic;
+	private int docNum;
+	private int freq;
 //	private StringBuilder content;
 	
 	public FileDescriptor() {
 		isPic = "false";
+	}
+
+
+
+	public FileDescriptor(int num, int freq) {
+		this.docNum = num;
+		this.freq = freq;
 	}
 
 
@@ -72,5 +81,29 @@ public class FileDescriptor {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+
+
+	public int getDocNum() {
+		return docNum;
+	}
+
+
+
+	public void setDocNum(int docNum) {
+		this.docNum = docNum;
+	}
+
+
+
+	public int getFreq() {
+		return freq;
+	}
+
+
+
+	public void setFreq(int freqLine) {
+		this.freq = freqLine;
 	}
 }

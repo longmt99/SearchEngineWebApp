@@ -1,4 +1,4 @@
-package il.ac.shenkar.SearchEngine;
+package il.ac.shenkar.searchEngine;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -20,11 +19,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
-
 @WebServlet("/controller/*")
-public class controller extends HttpServlet {
+public class Controller extends HttpServlet {
 
 	public MysqlConnector ms;
 	private static final long serialVersionUID = 1L;
@@ -34,7 +30,7 @@ public class controller extends HttpServlet {
 	 */
 	// private static final String SAVE_DIR = "uploadFiles";
 
-	public controller() {
+	public Controller() {
 		super();
 		ms = MysqlConnector.getInstance();
 	}
@@ -199,7 +195,7 @@ public class controller extends HttpServlet {
 
 			try {
 				List<String> splitedQueryList = ms.analyzeQuery(searchQuery);
-				List<Integer> docNumbers_of_results = ms.getDocNumResults(splitedQueryList);
+				List<FileDescriptor> docNumbers_of_results = ms.getDocNumResults(splitedQueryList);
 				List<FileDescriptor> result = ms.create_fileDescriptors_list_by_docNumbers(docNumbers_of_results);
 				request.setAttribute("searchQuery", searchQuery);
 				request.setAttribute("result", result.iterator());
@@ -234,13 +230,13 @@ public class controller extends HttpServlet {
 				e.printStackTrace();
 			}
 
-		    response.sendRedirect("http://localhost:8080/SearchEngineWebApp/controller/getFilesList");
+		    response.sendRedirect("http://localhost:8080/SearchEngineWebApp/Controller/getFilesList");
 
 		} else if (str.equals("/displayResult")) {
 			String docNum= request.getParameter("docNum");
 			System.out.println(docNum);
 			
-		    response.sendRedirect("http://localhost:8080/SearchEngineWebApp/controller/getFilesList");
+		    response.sendRedirect("http://localhost:8080/SearchEngineWebApp/Controller/getFilesList");
 
 		} 
 		

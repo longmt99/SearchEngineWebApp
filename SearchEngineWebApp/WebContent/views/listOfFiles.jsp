@@ -1,7 +1,7 @@
 <%@page import="java.awt.print.Printable"%>
 <%@ page language="java" contentType="text/html; charset=windows-1255"
     pageEncoding="windows-1255"%>
-<%@page import="il.ac.shenkar.SearchEngine.FileSchema" %>
+<%@page import="il.ac.shenkar.searchEngine.FileSchema" %>
 <%@page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>

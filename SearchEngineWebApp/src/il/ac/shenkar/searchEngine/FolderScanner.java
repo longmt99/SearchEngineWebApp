@@ -1,13 +1,7 @@
-package il.ac.shenkar.SearchEngine;
-import java.io.BufferedReader;
+package il.ac.shenkar.searchEngine;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class FolderScanner implements Runnable{
@@ -29,8 +23,12 @@ public class FolderScanner implements Runnable{
 
 	@Override
 	public void run() {
-		File folder = new File( System.getProperty("user.dir")+"\\WebContent\\db_test" );
-		
+		File folder = new File( System.getProperty("user.dir")+"\\WebContent\\db" );
+		try {
+			ms.clear_db_tables();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		while (true){
 			File[] listOfFiles = folder.listFiles();
 			try {
@@ -66,7 +64,7 @@ public class FolderScanner implements Runnable{
 					//ms.clear_db_tables();
 				//}
 				
-				Thread.sleep(3000);
+				Thread.sleep(10);
 			} catch (InterruptedException | SQLException | IOException e) {
 				e.printStackTrace();
 			}

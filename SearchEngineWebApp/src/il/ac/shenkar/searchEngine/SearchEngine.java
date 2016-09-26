@@ -1,4 +1,4 @@
-package il.ac.shenkar.SearchEngine;
+package il.ac.shenkar.searchEngine;
 
 public class SearchEngine {
 	
