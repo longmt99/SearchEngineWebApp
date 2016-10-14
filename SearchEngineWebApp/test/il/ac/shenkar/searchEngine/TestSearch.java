@@ -14,7 +14,7 @@ public class TestSearch {
 	@Test
 	public void  searchQuery() {
 		MysqlConnector ms = MysqlConnector.getInstance();
-		String searchQuery = "computer";
+		String searchQuery = "computer"; 
 		//System.out.println(searchQuery);
 
 		try {
