@@ -224,7 +224,8 @@ public class MysqlConnector {
 		statement.close();
 	}
 
-	/*
+	/* I reviewed and update your source code running well, sort word and index word 
+	 * Now I start tomcat and show data indexed
 	 * This function removes duplicate (word + document number) sets Before
 	 * deleting it sums the 'freq' column
 	 */

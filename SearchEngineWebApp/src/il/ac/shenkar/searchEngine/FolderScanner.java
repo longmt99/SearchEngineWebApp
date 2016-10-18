@@ -28,7 +28,7 @@ public class FolderScanner implements Runnable{
 			ms.clear_db_tables();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
-		}
+		}// now your started
 		while (true){
 			File[] listOfFiles = folder.listFiles();
 			try {
@@ -64,14 +64,14 @@ public class FolderScanner implements Runnable{
 					//ms.clear_db_tables();
 				//}
 				
-				Thread.sleep(10);
+				Thread.sleep(2);
 			} catch (InterruptedException | SQLException | IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-
+// now we start run your web
 
 	//Getters and setters
 	public static FolderScanner getInstance() {
