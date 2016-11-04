@@ -657,10 +657,13 @@ public class MysqlConnector {
 		statement = connection.createStatement();
 
 		// Change freq=freq +1
-		statement.executeUpdate("UPDATE indexFile "
+		String updateSQL = "UPDATE indexFile "
 					+ "		SET freq=freq +1"
-					+ "		WHERE docNumber =" + docNum
-					+ "	    	AND word ='" + word+"'");
+					+ "		WHERE docNumber ='" + docNum+"'"
+					+ "	    	AND word ='" + word+"'";
+		
+		System.out.println("updateSQL:" + updateSQL);
+		statement.executeUpdate(updateSQL);
 
 		statement.close();
 	}
