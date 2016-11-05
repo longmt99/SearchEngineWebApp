@@ -234,7 +234,7 @@ public class MysqlConnector {
 		try {
 			// Creating a temporary table that will store a table without duplicate rows.
 			statement.executeUpdate("CREATE temporary TABLE tsum AS"
-					+ "		SELECT word,GROUP_CONCAT(freq) as freq, GROUP_CONCAT(docNumber) docNumber,hits "
+					+ "		SELECT word,GROUP_CONCAT(freq) as freq, GROUP_CONCAT(docNumber) docNumber,  hits "
 					+ "		FROM indexfile group by word;");
 			// Clearing completely the 'index File' table
 			statement.executeUpdate("TRUNCATE TABLE indexFile;");
@@ -243,7 +243,22 @@ public class MysqlConnector {
 			// temporary table
 			statement.executeUpdate("INSERT INTO indexFile (`word`,`docNumber`,`freq`, `hits`)"
 							+ "		SELECT word,docNumber,freq,hits " + "		FROM tsum;");
-		
+			
+			String query = "SELECT word,freq  FROM indexFile " ;
+			ResultSet rs = statement.executeQuery(query);
+			List<FileDescriptor> list = new ArrayList<FileDescriptor>();
+			while (rs.next()) {
+				String word = rs.getString("word");
+				String freq = rs.getString("freq");
+				FileDescriptor file = new FileDescriptor();
+				file.setTitle(word);
+				file.setPreview(freq);
+				list.add(file);
+			}
+			
+			for (FileDescriptor fileDescriptor : list) {
+				updateHitsInIndexFile(fileDescriptor.getTitle(),fileDescriptor.getPreview());
+			}
 		} finally {
 			// Deleting the temporary table we used
 			statement.executeUpdate("DROP TEMPORARY TABLE IF EXISTS tsum;");
@@ -668,6 +683,21 @@ public class MysqlConnector {
 		statement.close();
 	}
 
+	private void updateHitsInIndexFile(String  word,String freq ) throws SQLException {
+		String[] splitsFreq = StringUtils.split(freq,",");
+		int hits =0;
+		for (int i = 0; i < splitsFreq.length; i++) {
+			int fr= Integer.parseInt(splitsFreq[i]);
+			hits +=fr;
+		}
+		// Change freq=freq +1
+		String updateSQL = "UPDATE indexFile "
+					+ "		SET hits=" + hits
+					+ "		WHERE  word ='" + word+"'";
+		
+		statement.executeUpdate(updateSQL);
+
+	}
 	public List<FileDescriptor> getDocNumList(List<String> stringList)
 			throws SQLException {
 		List<FileDescriptor> documentNumbers = new ArrayList<FileDescriptor>();
