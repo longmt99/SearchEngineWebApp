@@ -311,7 +311,16 @@ public class MysqlConnector {
 		System.out.println("Removing completed");
 	}
 
-	public void insert_file_to_db_if_doesnt_exists_or_deleted_before(String type, String path, long lastModified)
+	/** have new one or not
+	 * 
+	 * @param type
+	 * @param path
+	 * @param lastModified
+	 * @return
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public boolean insert_file_to_db_if_doesnt_exists_or_deleted_before(String type, String path, long lastModified)
 			throws SQLException, IOException {
 		
 		// Fix path (ex. c:\\abc\\file...)
@@ -360,7 +369,7 @@ public class MysqlConnector {
 			parseFile_and_add_to_index_file_table(type, path, docNum, tagNames);
 
 			System.out.println("\nAdd completely - " + path);
-		
+		return true;
 		// The path exist in postingFile table
 		//Check if this file(path) has removed from db folder (deleted==1)
 		} else {
@@ -412,6 +421,7 @@ public class MysqlConnector {
 //				statement.close();
 			}
 		}
+		return false;
 	}
 	
 //	public void insert_pic_to_db(String path, String fileExtension, long currentTimeMillis, String tagNames) throws SQLException, IOException {
@@ -478,7 +488,7 @@ public class MysqlConnector {
 			everything = tagNames;
 		}
 		// Removing special characters from the text
-		everything = everything.replaceAll("(?<!\\d)\\.|\\.+$|[^a-zA-Z0-9. ]"," ");
+		everything = everything.replaceAll("(?<!\\d)\\.|\\.+$|[^a-zA-Z0-9. ] [^?(a-zA-Z0-9?)]"," ");
 		// everything =
 		// everything.replaceAll("(?<=\\d)\\.(?!\\d)|(?<!\\d)\\.|[^a-zA-Z0-9. ]",
 		// " ");
@@ -633,7 +643,6 @@ public class MysqlConnector {
 				
 				// Get docNum by words
 				List<FileDescriptor> docNumbers_to_add_if_need = getDocNumList(tmp);
-				
 				// Add numbers to main list of ducument numbers
 				for (FileDescriptor doc : docNumbers_to_add_if_need) {
 					int num = doc.getDocNum();

@@ -23,7 +23,7 @@ public class FolderScanner implements Runnable{
 
 	@Override
 	public void run() {
-		File folder = new File( System.getProperty("user.dir")+"\\WebContent\\db" );
+		File folder = new File( System.getProperty("user.dir")+"\\WebContent\\db_test" );
 		try {
 			ms.clear_db_tables();
 		} catch (SQLException e1) {
@@ -31,10 +31,11 @@ public class FolderScanner implements Runnable{
 		}// now your started
 		while (true){
 			File[] listOfFiles = folder.listFiles();
+			boolean isNew = false;
 			try {
 				for (File file : listOfFiles) {
 				    if (file.isFile()) {
-				    	ms.insert_file_to_db_if_doesnt_exists_or_deleted_before("text", file.getPath(), file.lastModified());	
+				    	isNew = ms.insert_file_to_db_if_doesnt_exists_or_deleted_before("text", file.getPath(), file.lastModified());	
 				    }
 				    else{
 				    	//check the folder of pictures
@@ -44,13 +45,13 @@ public class FolderScanner implements Runnable{
 			    				if (image.isFile() && !image.getName().split("\\.")[image.getName().split("\\.").length-1].equals("txt")) {
 						    		//this is image file
 			    					//System.out.println( image.getName() );
-						    		ms.insert_file_to_db_if_doesnt_exists_or_deleted_before("image", image.getPath(), image.lastModified());	
+			    					isNew = ms.insert_file_to_db_if_doesnt_exists_or_deleted_before("image", image.getPath(), image.lastModified());	
 							    }
 			    			}
 				    	}
 					}
 				}
-			
+			if(isNew){
 				// Sorting the index file by an alfabetic order
 				ms.sortByWord();
 
@@ -63,8 +64,8 @@ public class FolderScanner implements Runnable{
 					// Clear DB tables
 					//ms.clear_db_tables();
 				//}
-				
-				Thread.sleep(2);
+			}	
+			Thread.sleep(2);
 			} catch (InterruptedException | SQLException | IOException e) {
 				e.printStackTrace();
 			}
