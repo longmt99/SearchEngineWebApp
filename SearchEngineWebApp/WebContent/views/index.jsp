@@ -18,6 +18,11 @@
 				href="../controller/adminLogin"><span
 					class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
 					Configuration</a></li>
+					<li role="presentation"><a id="adminConfiguration" href="../controller/"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+ Search</a></li>
+			<li role="presentation"><a id="help" href="../controller/help"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+ Help</a></li>
+						
 		</ul>
 	</nav>
 

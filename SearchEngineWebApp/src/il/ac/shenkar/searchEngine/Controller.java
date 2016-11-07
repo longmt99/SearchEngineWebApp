@@ -141,7 +141,9 @@ public class Controller extends HttpServlet {
 		else if (str.equals("/adminLogin")) {
 			request.getRequestDispatcher("/views/adminLogin.html").forward(request, response);
 		}
-		
+		else if (str.equals("/help")) {
+			request.getRequestDispatcher("/views/help.html").forward(request, response);
+		}
 		else if (str.equals("/adminMenu")) {
 			request.getRequestDispatcher("/views/administration.html").forward(request, response);
 		}
