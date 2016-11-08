@@ -90,7 +90,7 @@
 							+ fileItem.getTitle() + "</a> ("+fileItem.getFreq()+") "  
 									+ "<a href='http://localhost:8080/SearchEngineWebApp/controller/displayResult?filePath="+ pathWithoutStart+ "'"
 											+" target='_blank' class='resultTitleLink'>"
-									+"<img src='../views/includes/images/printer.png'  height=22 width=28 alt='View and print' id='print-button' />View and print</a>"
+											+"<img src='../views/includes/images/printer.png'  height=22 width=28 alt='View and print' id='print-button' />View and print</a>"
 								+ "</section>"
 							+ "	<section id='preview'>" + preview_with_bold_text
 							+ "</section>"
