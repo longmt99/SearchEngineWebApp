@@ -77,19 +77,24 @@
 						}
 					}
 
-					int startIn = fileItem.getPath().indexOf("\\db");
+					int startIn = fileItem.getPath().indexOf("\\mytxt");
 					int endIn = fileItem.getPath().length();
-					String pathWithoutStart = fileItem.getPath().substring(startIn,
-							endIn);
+					String pathWithoutStart = fileItem.getPath().substring(startIn,endIn);
 
 					out.println("<article class='container'>	"
 							//http://localhost:8080/SearchEngineWebApp/db/images/1.1414669848596.jpg
 							//<a href="../db/file.txt" target="_blank">Who is Superman?</a>
-							+ "	<section id='title'> <a href='.."
-							+ pathWithoutStart + "' target='_blank' class='resultTitleLink'>"
-							+ fileItem.getTitle() + "</a> ("+fileItem.getFreq()+")</section>"
+							
+							+ "	<section id='title'> <a href='http://localhost:8080/SearchEngineWebApp/controller/displayResult?filePath="+ pathWithoutStart+ "'"
+							+" target='_blank' class='resultTitleLink'>"
+							+ fileItem.getTitle() + "</a> ("+fileItem.getFreq()+") "  
+									+ "<a href='http://localhost:8080/SearchEngineWebApp/controller/displayResult?filePath="+ pathWithoutStart+ "'"
+											+" target='_blank' class='resultTitleLink'>"
+									+"<img src='../views/includes/images/printer.png'  height=22 width=28 alt='View and print' id='print-button' />View and print</a>"
+								+ "</section>"
 							+ "	<section id='preview'>" + preview_with_bold_text
 							+ "</section>"
+							
 							+ "	<section id='resultDetailsContainer'>"
 							+ "		<section id='author'>" + fileItem.getAuthor()
 							+ ",&nbsp </section>" + "		<section id='date'>"
@@ -97,6 +102,7 @@
 							+ "	</section>" + "</article><hr>");
 				}
 			%>
+			
 		</article>
 	</div>
 </body>

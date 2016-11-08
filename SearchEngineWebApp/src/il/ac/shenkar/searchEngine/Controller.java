@@ -1,6 +1,8 @@
 package il.ac.shenkar.searchEngine;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
@@ -231,11 +233,11 @@ public class Controller extends HttpServlet {
 		    response.sendRedirect("http://localhost:8080/SearchEngineWebApp/Controller/getFilesList");
 
 		} else if (str.equals("/displayResult")) {
-			String docNum= request.getParameter("docNum");
-			System.out.println(docNum);
+			String filePath= request.getParameter("filePath");
+			System.out.println(filePath);
 			// what is error  now?
-		    response.sendRedirect("http://localhost:8080/SearchEngineWebApp/Controller/getFilesList");
-
+		    dispatcher = getServletContext().getRequestDispatcher("/views/show_a_result.jsp?filePath="+filePath);
+			dispatcher.forward(request, response);
 		} 
 		
 		else {
