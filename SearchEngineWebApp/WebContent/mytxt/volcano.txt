@@ -1,0 +1,8 @@
+﻿#Title: Volcano
+#Creation date: 4.11.2013
+#Author: wikipedia
+#Preview: Volcanoes is general is a natural phenomenon.
+
+A volcano is a rupture in the crust of a planetary-mass object, such as Earth, that allows hot lava, volcanic ash, and gases to escape from a magma chamber below the surface.
+Earth's volcanoes occur because its crust is broken into 17 major,
+rigid tectonic plates that float on a hotter, softer layer in its mantle.
