@@ -9,7 +9,6 @@ public class FileDescriptor {
 	private String isPic;
 	private int docNum;
 	private int freq;
-//	private StringBuilder content;
 	
 	public FileDescriptor() {
 		isPic = "false";

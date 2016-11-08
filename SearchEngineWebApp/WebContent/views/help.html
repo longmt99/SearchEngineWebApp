@@ -19,42 +19,41 @@
 </ul></nav>
 
 <section id="loginWrapper">
-	    <h1 id="mainTitle">About Project</h1>
+	    <h1 id="mainTitle">	מדריך למשתמש - אחזור מידע</h1>
 	    <fieldset id="inputs">
 	    <div align="right">
-	      מדריך למשתמש - אחזור מידע
 <br/>
-קליטת מסמך חדש
+<h4>קליטת מסמך חדש </h4>
 <br/>
 כדי לקלוט מסמך חדש במערכת, אנו נצטרך לפתוח תוכנת תמלילים ולכתוב בה את הטקסט הרצוי
 במבנה המתאים.<br/>
 לאחר מכן, אנו נשמור את הקובץ טקסט בתיקייה mytxt אשר משמשת כתיקיית “מקור”.<br/>
 לאחר שביצענו את השמירה של הקובץ טקסט במבנה המתאים, אנו נעביר בצורה ידנית את הקובץ מתיקיית המקור ‘mytxt’ אל תיקיית ה-“החסנה” - db_test .<br/>
-המבנה של המסמך הוא:<br/>
-<br/>
-#Title: Volcano
-#Creation date: 4.11.2013
-#Author: wikipedia
+מבנה של המסמך הוא:<br/>
+
+#Title: Volcano <br/>
+#Creation date: 4.11.2013<br/>
+#Author: Wikipedia <br/>
 #Preview: Volcanoes is general is a natural phenomenon.
 <br/>
 A volcano is a rupture in the crust of a planetary-mass object, such as Earth, that allows hot lava, volcanic ash, and gases to escape from a magma chamber below the surface.
 Earth's volcanoes occur because its crust is broken into 17 major,
 rigid tectonic plates that float on a hotter, softer layer in its mantle.
 <br/>
-ביטול מסמך
+<h4>ביטול מסמך</h4>
 <br/>
 כדי לבטל מסמך, אנו נבצע מחיקה ישירה של המסמך מקובץ ה-“החסנה” - db_test .
 בזמן ביטול המסמך אנו נצטרך שהמנוע יפעל ברקע.<br/>
 כלומר, להפעיל את הקובץ: SearchEngine.java כ- Java Application ואז לבצע את המחיקה של המסמך מקובץ ה- “החסנה” - db_test .
 
 <br/>
-עדכון מסמך
+<h4>עדכון מסמך</h4>
 <br/>
 כדי לעדכן מסמך, אנו נבצע את השינויים הנדרשים בטקסט בהתאם למבנה המתאים של המסמך ונבצע שמירה.
 המנוע יעדכן באופן אוטומטי את המילים במסד הנתונים ובאופן ויזואלי למשתמש.
 <br/>
 
-מנשק משתמש
+<h4>מנשק משתמש </h4>
 <br/>
 כדי לחפש מילים מקבצי הטקסט, אנו נצטרך להקליד את המילים אותם נרצה לחפש.
 אם נרצה לחפש מספר מילים בכל הקבצים שכבר אוחסנו במסד הנתונים, אזי נקליד אותם באופן רציף.
@@ -62,10 +61,11 @@ rigid tectonic plates that float on a hotter, softer layer in its mantle.
 tree volcano<br/>
 לא נצטרך סימני פיסוק כדי להפריד בין המילים.
 <br/>
-מבנה מסד נתונים
+<h4> מבנה מסד נתונים </h4>
 <br/>
 במסד הנתונים יש 2 טבלאות :<br/>
-Indexfile, Postingfile<br/>
+Indexfile<br/>
+Postingfile<br/>
 <br/>
 טבלת ה- Indexfile משמשת לאחסון של המילים אשר נקראו מהמסמכים.<br/>
 כלומר, ליד כל מילה יופיעו מספר המסמך, מספר פעמים שבה מופיעה המילה במסמך וכמות כוללת של הופעות של המילה בכל המסמכים.

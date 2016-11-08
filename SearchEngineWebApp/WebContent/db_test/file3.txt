@@ -1,7 +1,0 @@
-#Title: File 3
-#Creation date: 1.1.2014
-#Author: Tester
-#Preview: File Test 3
-
-to live or
-not to live

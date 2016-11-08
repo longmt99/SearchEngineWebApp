@@ -1,9 +1,0 @@
-#Title: File 2
-#Creation date: 1.1.2014
-#Author: Tester
-#Preview: File Test 2
-
- my
- computer is
- about live
- 

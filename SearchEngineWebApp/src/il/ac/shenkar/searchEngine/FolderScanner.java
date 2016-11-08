@@ -12,11 +12,10 @@ public class FolderScanner implements Runnable{
 		super();
 		ms = MysqlConnector.getInstance();
 		
-		// creating 'postingFile' 'indexFile' tables
+		// Creating 'postingFile' 'indexFile' tables
 		try {
 			ms.initTables();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -28,7 +27,7 @@ public class FolderScanner implements Runnable{
 			ms.clear_db_tables();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
-		}// now your started
+		}
 		while (true){
 			File[] listOfFiles = folder.listFiles();
 			boolean isNew = false;
@@ -38,13 +37,11 @@ public class FolderScanner implements Runnable{
 				    	isNew = ms.insert_file_to_db_if_doesnt_exists_or_deleted_before("text", file.getPath(), file.lastModified());	
 				    }
 				    else{
-				    	//check the folder of pictures
+				    	//Check the folder of pictures
 				    	if (file.isDirectory() && file.getName().equals("images")){
 				    		File[] listOfImages = file.listFiles();
 			    			for (File image : listOfImages) {
 			    				if (image.isFile() && !image.getName().split("\\.")[image.getName().split("\\.").length-1].equals("txt")) {
-						    		//this is image file
-			    					//System.out.println( image.getName() );
 			    					isNew = ms.insert_file_to_db_if_doesnt_exists_or_deleted_before("image", image.getPath(), image.lastModified());	
 							    }
 			    			}
@@ -52,18 +49,14 @@ public class FolderScanner implements Runnable{
 					}
 				}
 			if(isNew){
-				// Sorting the index file by an alfabetic order
+				// Sorting the 'indexFile' by an alphabet order
 				ms.sortByWord();
 
-				// Removing duplicates from the index file
+				// Removing duplicates from the 'indexFile'
 				ms.removeDuplicate();
 			
 				ms.check_if_all_file_exists_by_posting_table_paths();
 				
-				//if (listOfFiles.length==0) {
-					// Clear DB tables
-					//ms.clear_db_tables();
-				//}
 			}	
 			Thread.sleep(2);
 			} catch (InterruptedException | SQLException | IOException e) {
@@ -71,8 +64,6 @@ public class FolderScanner implements Runnable{
 			}
 		}
 	}
-
-// now we start run your web
 
 	//Getters and setters
 	public static FolderScanner getInstance() {

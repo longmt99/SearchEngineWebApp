@@ -28,7 +28,6 @@ public class Controller extends HttpServlet {
 	/**
 	 * web application directory.
 	 */
-	// private static final String SAVE_DIR = "uploadFiles";
 
 	public Controller() {
 		super();
@@ -43,8 +42,6 @@ public class Controller extends HttpServlet {
 		// Upload
 		if (str.equals("/upload")) {
 			/* If user send file */
-			// String loadFile = request.getParameter("loadFile");
-			// if (loadFile != null && loadFile.equals("true")) {
 
 			String realPath = getServletContext().getRealPath(File.separator);
 			String[] realPathParts = realPath.split("\\\\");
@@ -59,7 +56,7 @@ public class Controller extends HttpServlet {
 			String tagnames = "";
 			long currentTimeMillis = System.currentTimeMillis();
 			StringBuilder message = new StringBuilder();
-			// process only if its multipart content
+			// Process only if its multipart content
 			if (ServletFileUpload.isMultipartContent(request)) {
 				try {
 					List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -68,9 +65,8 @@ public class Controller extends HttpServlet {
 						if (!item.isFormField()) {
 							
 							fileFullName = item.getName();
-//							fileNameExtension = new File(item.getName()).getName();
 							
-							// pure fileName 
+							// Pure fileName 
 							String[] fileFullName_Splited = fileFullName.split("\\.");
 							for (int i=0; i<fileFullName_Splited.length-1; i++){
 								fileName.append( fileFullName_Splited[i]+"." );
@@ -80,13 +76,13 @@ public class Controller extends HttpServlet {
 							
 							
 							if (item.getContentType().contains("image")) {
-								// create text file in db-folder
+								// Create text file in images-folder
 								item.write(new File(fullPath + "\\WebContent\\db\\images\\"+ fileName+currentTimeMillis+"."+fileExtension));
 								message.append(fileFullName + " tag as: ");
 								System.out.println("create image file Success!");
 
 							} else if (item.getContentType().contains("text")) {
-								// create text file in db-folder
+								// CCreate text file in db-folder
 								item.write(new File(fullPath + "\\WebContent\\db\\"+ fileName+currentTimeMillis+"."+fileExtension));
 								message.append(fileFullName);
 								System.out.println("create text file Success!");
@@ -176,7 +172,7 @@ public class Controller extends HttpServlet {
 					String query = "SELECT username,password FROM accounts WHERE username='"+ username + "' AND password='"+ password +"'";
 					ResultSet rs = ms.statement.executeQuery(query);
 					if (!rs.isBeforeFirst() ) {  
-						//in case the login failes-> retry
+						//in case the login fails-> retry
 						dispatcher = getServletContext().getRequestDispatcher("/views/adminLogin.html");
 						dispatcher.forward(request, response); 
 						} 
@@ -237,7 +233,7 @@ public class Controller extends HttpServlet {
 		} else if (str.equals("/displayResult")) {
 			String docNum= request.getParameter("docNum");
 			System.out.println(docNum);
-			
+			// what is error  now?
 		    response.sendRedirect("http://localhost:8080/SearchEngineWebApp/Controller/getFilesList");
 
 		} 

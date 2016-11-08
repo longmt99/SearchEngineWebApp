@@ -8,5 +8,4 @@ public class SearchEngine {
 	    fs = FolderScanner.getInstance();
 		fs.run();
 	}
-// It is your code, I just change some data structure for implement indexing files 
 }
