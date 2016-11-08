@@ -18,11 +18,12 @@ public class FolderScanner implements Runnable{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
+	}// OK?Yes HOW ABOUT CSS?can you show what you di?yes - for example, look at the Help page. I've also insert line that changed the direction to: RTL.
+	// I want that all the UI will with this color. To unified it to my own style sheet.
 
 	@Override
 	public void run() {
-		File folder = new File( System.getProperty("user.dir")+"\\WebContent\\db_test" );
+		File folder = new File( System.getProperty("user.dir")+"\\WebContent\\mytxt" );
 		try {
 			ms.clear_db_tables();
 		} catch (SQLException e1) {

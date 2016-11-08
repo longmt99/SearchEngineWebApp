@@ -415,7 +415,7 @@ public class MysqlConnector {
 		// Removing special characters from the text
 		everything = everything.replaceAll("(?<!\\d)\\.|\\.+$|[^a-zA-Z0-9. ] [^?(a-zA-Z0-9?)]"," ");
 		everything = everything.replaceAll("\r", "");
-		everything = everything.replaceAll("\n", " ");
+		everything = everything.replaceAll("\n", " ").replaceAll("'", " ");
 		words = everything.split(" ");
 		for (String tmpWord : words) {
 			tmpWord.trim();
@@ -581,9 +581,10 @@ public class MysqlConnector {
 	 */
 	private boolean checkWordExistedInIndexFile(String  word , int docNum) throws SQLException{
 		statement = connection.createStatement();
+		System.out.print(word + docNum);
 		String query = "SELECT docNumber,freq  FROM indexFile "
 				+ "		WHERE word = '" + word + "'"
-						+ " AND  docNumber = " + docNum + "" ;
+						+ " AND  docNumber = '" + docNum + "'" ;
 		ResultSet rs = statement.executeQuery(query);
 		while (rs.next()) {
 			return true;
