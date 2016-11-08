@@ -37,9 +37,9 @@
 					String print = "<br/><a href='javascript:window.print()'  target='_blank' class='resultTitleLink'>"
 							+"<img src='../views/includes/images/printer.png'  height=22 width=28 alt='print this page' id='print-button' />Print this page</a><br/>";
 					if (!filePath.endsWith("txt")){
-						out.println(print+ "<img src='"+filePath+"'></img>"  + print);
+						out.println("<img src='.."+filePath+"'></img>"  + print);
 					}else{
-						out.println(print + everything + print);
+						out.println(everything + print);
 						out.flush();
 					}
 				%>
