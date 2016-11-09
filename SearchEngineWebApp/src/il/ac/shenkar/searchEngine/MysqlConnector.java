@@ -499,20 +499,20 @@ public class MysqlConnector {
 		List<String> splitByOR = new ArrayList<String>(Arrays.asList(searchQuery.split(" OR ")));
 
 		// Run on every element of splitByOR list and remove AND word and get array of words.
-		for (int i=0; i<splitByOR.size(); i++) {
+		/*for (int i=0; i<splitByOR.size(); i++) {
 			String query = splitByOR.get(i).replace(" AND ", " ");
 			query = query.trim();
 			splitByOR.set(i, query);
 		}
-
+*/
 		return splitByOR;
 	}
 
 	public List<FileDescriptor> getDocNumResults(List<String> splitedQueryList)
 			throws SQLException {
 		List<FileDescriptor> resultDocNumbers = new ArrayList<FileDescriptor>();
-		List<FileDescriptor> docNumbers_ToRemove = new ArrayList<FileDescriptor>();
-		List<FileDescriptor> docNumbers_ToRemoveFRom = new ArrayList<FileDescriptor>();
+		List<FileDescriptor> docNumbers_part2 = new ArrayList<FileDescriptor>();
+		List<FileDescriptor> docNumbers_part1 = new ArrayList<FileDescriptor>();
 		for (String words : splitedQueryList) {
 
 			/*
@@ -532,28 +532,49 @@ public class MysqlConnector {
 				// take string(0) split by space " "
 				List<String> tmp = new ArrayList<String>(Arrays.asList(list_of_not_parts.get(0).split(" ")));
 				// Get docNum by words
-				docNumbers_ToRemoveFRom = getDocNumList(tmp);
+				docNumbers_part1 = getDocNumList(tmp);
 
 				// take string(1) split by space " "
 				tmp = new ArrayList<String>(Arrays.asList(list_of_not_parts.get(1).split(" ")));
 				// Get docNum by words
-				docNumbers_ToRemove = getDocNumList(tmp);
+				docNumbers_part2 = getDocNumList(tmp);
 
-				for (FileDescriptor doc : docNumbers_ToRemove) {
+				for (FileDescriptor doc : docNumbers_part2) {
 					int num = doc.getDocNum();
-					int index_to_remove = docNumbers_ToRemoveFRom.indexOf(num);
-					if (index_to_remove != -1) {
-						docNumbers_ToRemoveFRom.remove(index_to_remove);
+					for (FileDescriptor doc2 : docNumbers_part1) {
+						int index_to_remove = doc2.getDocNum();
+						if (num != index_to_remove) {
+							resultDocNumbers.add(doc2);
+						}
 					}
-				}
-				
-				// Add numbers to main list of document numbers
-				for (FileDescriptor doc : docNumbers_ToRemoveFRom) {
+				}	
+
+			// Search query without NOT
+			} if (words.contains("AND")) {
+				// list - dog, big duck
+				// remove 'NOT' and split
+				// string(0) , string(1)
+				List<String> list_of_not_parts = new ArrayList<String>(Arrays.asList(words.split(" AND ")));
+
+				// take string(0) split by space " "
+				List<String> tmp = new ArrayList<String>(Arrays.asList(list_of_not_parts.get(0).split(" ")));
+				// Get docNum by words
+				docNumbers_part1 = getDocNumList(tmp);
+
+				// take string(1) split by space " "
+				tmp = new ArrayList<String>(Arrays.asList(list_of_not_parts.get(1).split(" ")));
+				// Get docNum by words
+				docNumbers_part2 = getDocNumList(tmp);
+
+				for (FileDescriptor doc : docNumbers_part2) {
 					int num = doc.getDocNum();
-					if (resultDocNumbers.indexOf(num) == -1) {
-						resultDocNumbers.add(doc);
+					for (FileDescriptor doc2 : docNumbers_part1) {
+						int index_to_remove = doc2.getDocNum();
+						if (num == index_to_remove) {
+							resultDocNumbers.add(doc2);
+						}
 					}
-				}
+				}	
 
 			// Search query without NOT
 			} else {
@@ -565,7 +586,14 @@ public class MysqlConnector {
 				// Add numbers to main list of document numbers
 				for (FileDescriptor doc : docNumbers_to_add_if_need) {
 					int num = doc.getDocNum();
-					if (resultDocNumbers.indexOf(num) == -1) {
+					boolean existed =false;
+					for (FileDescriptor docExisted : resultDocNumbers) {
+						int id = docExisted.getDocNum();
+						if(id==num){
+							existed =true;
+						}
+					}
+					if (!existed) {
 						resultDocNumbers.add(doc);
 					}
 				}

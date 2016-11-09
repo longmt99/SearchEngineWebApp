@@ -25,7 +25,7 @@ public class FileDescriptor {
 
 	@Override
 	public String toString() {
-		return "FileDescriptor [title=" + title + ", creationDate="
+		return "FileDescriptor "+docNum+" [title=" + title + ", creationDate="
 				+ creationDate + ", author=" + author + ", preview=" + preview
 				+ ", path=" + path + ", isPic=" + isPic + "]";
 	}
