@@ -555,7 +555,7 @@ public class MysqlConnector {
 				}	
 
 			// Search query without NOT
-			} if (words.contains("AND")) {
+			} else if (words.contains("AND")) {
 				// list - dog, big duck
 				// remove 'NOT' and split
 				// string(0) , string(1)
