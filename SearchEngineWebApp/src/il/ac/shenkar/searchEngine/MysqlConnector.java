@@ -571,13 +571,18 @@ public class MysqlConnector {
 				// Get docNum by words
 				docNumbers_part2 = getDocNumList(tmp);
 
-				for (FileDescriptor doc : docNumbers_part2) {
+				for (FileDescriptor doc : docNumbers_part1) {
 					int num = doc.getDocNum();
-					for (FileDescriptor doc2 : docNumbers_part1) {
+					boolean existed =false;
+					for (FileDescriptor doc2 : docNumbers_part2) {
 						int index_to_remove = doc2.getDocNum();
 						if (num == index_to_remove) {
-							resultDocNumbers.add(doc2);
+							existed=true;
+							break;
 						}
+					}
+					if(existed){
+						resultDocNumbers.add(doc);
 					}
 				}	
 
