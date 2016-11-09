@@ -541,11 +541,16 @@ public class MysqlConnector {
 
 				for (FileDescriptor doc : docNumbers_part2) {
 					int num = doc.getDocNum();
+					boolean existed =false;
 					for (FileDescriptor doc2 : docNumbers_part1) {
 						int index_to_remove = doc2.getDocNum();
-						if (num != index_to_remove) {
-							resultDocNumbers.add(doc2);
+						if (num == index_to_remove) {
+							existed=true;
+							break;
 						}
+					}
+					if(!existed){
+						resultDocNumbers.add(doc);
 					}
 				}	
 
